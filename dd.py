@@ -1,3 +1,4 @@
-for i in range(-10, 10):
-    if i % 3 == 1:
-        print(i)
+for i in range(4):
+    for j in range(4):
+        print(i, end=" ")
+    print()

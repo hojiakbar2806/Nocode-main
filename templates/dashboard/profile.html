@@ -1,0 +1,13 @@
+{% extends "dashboard/base.html" %} {% block title %} {{username}} Profile {% endblock
+title %} {% block content %}
+
+
+{% include "dashboard/components/navbar.html" %}
+
+
+
+{% for folder in folders %}
+
+<a href="playground/{{folder}}">{{folder}}</a>
+
+{% endfor %} {% endblock content %}

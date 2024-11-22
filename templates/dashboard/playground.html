@@ -1,0 +1,25 @@
+{% extends "dashboard/base.html" %} {% block title %}Playground{% endblock title
+%} {% block content %} {% include "dashboard/components/navbar.html" %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3 sidebar d-flex flex-column gap-4">
+      <button class="btn btn-primary" onclick="addComponent('header')">
+        Header
+      </button>
+      <button class="btn btn-primary" onclick="addComponent('footer')">
+        Footer
+      </button>
+      <button class="btn btn-primary" onclick="addComponent('carousel')">
+        Carousel
+      </button>
+      <button class="btn btn-primary" onclick="addComponent('text')">
+        Text Box
+      </button>
+    </div>
+
+    {% include "dashboard/components/playground.html" %}
+  </div>
+</div>
+
+{% endblock content %}

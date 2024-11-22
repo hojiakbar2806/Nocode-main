@@ -1,0 +1,36 @@
+<div
+  class="modal fade"
+  id="myModal"
+  tabindex="-1"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Formani to'ldiring</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="/create-project">
+          <div class="mb-3">
+            <label for="projectname" class="form-label">Project name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="projectname"
+              name="projectname"
+              required
+            />
+          </div>
+          <button type="submit" class="w-100 btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
