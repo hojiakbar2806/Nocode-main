@@ -119,28 +119,11 @@ function getElementInfo(element) {
   return `${tag}${id}${classes}`;
 }
 
-async function deleteElement(projectName, elementPath) {
-  try {
-    const response = await fetch(`/update-element/delete/${projectName}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ elementPath }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "success") {
-          window.location.reload();
-          print("success");
-        }
-      });
-
-    return response.ok;
-  } catch (error) {
-    console.error("Element o'chirishda xatolik:", error);
-    return false;
-  }
+function deleteElement(projectName, elementPath) {
+  fetch(`/update-element/delete/${projectName}`, {
+    method: "POST",
+    body: JSON.stringify({ elementPath }),
+  }).then(() => window.location.reload());
 }
 
 window.onload = function () {
@@ -166,15 +149,7 @@ function addComponent(component, variant) {
   fetch(`/append-component/${projectName}`, {
     method: "POST",
     body: JSON.stringify({ component: component, variant: variant }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.status === "success") {
-        window.location.reload();
-        print("success");
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  }).then(() => {
+    window.location.reload();
+  });
 }

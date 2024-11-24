@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, request, render_template, redirect, url_for, flash, abort
 
-import utils
+from utils import update_html_element
 
 
 app = Flask(__name__,  template_folder="templates", static_folder='static')
@@ -153,7 +153,7 @@ def create_project():
 
     os.mkdir(project_dir)
 
-    with open(f"{project_dir}/index.html", "w", encoding="utf-8") as f:
+    with open(f"{project_dir}/index.html", "w") as f:
         with open(temple_dir, "r") as t:
             f.write(t.read())
     flash(f"{projectname} mivafaqiyatli yaratildi", "success")
@@ -185,14 +185,15 @@ def append_component(projectname):
     comp_variant = data.get("variant")
     username = session["username"]
 
-    comp_dir = f"{COMPONENTS}/{comp_name}/{comp_variant}.html"
-    user_file_dir = f"{USERS_FOLDER}/{username}/{projectname}/index.html"
+    comp_path = f"{COMPONENTS}/{comp_name}/{comp_variant}.html"
+    file_path = f"{USERS_FOLDER}/{username}/{projectname}/index.html"
 
-    with open(comp_dir, "r") as f:
+    with open(comp_path, "r") as f:
         component = f.read()
 
-    utils.update_html_element([], component, "insert", user_file_dir)
-    return jsonify({"status": "success", "message": "ok"})
+    status, message = update_html_element("append", file_path, component)
+    flash(message, category="success" if status else "danger")
+    return jsonify({"status": status})
 
 
 @app.route("/<username>/<projectname>", methods=["GET"])
@@ -212,20 +213,15 @@ def update_element(mode, projectname):
     if redirect_response:
         return redirect_response
 
-    index = json.loads(request.data).get("elementPath")
-
+    indexes = json.loads(request.data).get("elementPath")
     username = session.get("username")
-    user_file_dir = f"{USERS_FOLDER}/{username}/{projectname}/index.html"
-    print("-----------------")
-    print(user_file_dir)
-    print(mode)
-    print(index)
-    print("-----------------")
-    utils.update_html_element(
-        element_indexes=index,
-        mode=mode, file_path=user_file_dir, new_content=""
-    )
-    return jsonify({"status": "success"})
+
+    file_path = f"{USERS_FOLDER}/{username}/{projectname}/index.html"
+
+    status, message = update_html_element(mode, file_path, "", indexes)
+
+    flash(message, category="success" if status else "danger")
+    return jsonify({"status": status})
 
 
 if __name__ == '__main__':
