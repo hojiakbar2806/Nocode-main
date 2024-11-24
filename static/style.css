@@ -7,53 +7,9 @@
 
 html,
 body {
-  overflow: hidden;
   height: 100%;
   width: 100%;
-}
-
-.sidebar {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  background-color: #f8f9fa;
-  padding-top: 30px;
-  width: 250px;
-}
-
-.sidebar a {
-  text-decoration: none;
-  font-size: 18px;
-  color: #333;
-  display: block;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #fff;
-  border-radius: 4px;
-}
-
-.sidebar a:hover {
-  background-color: #ddd;
-}
-
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.zoom-buttons {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-#playground-container {
-  width: 100%;
-  height: 100vh;
   overflow: hidden;
-  position: relative;
 }
 
 #playground {
@@ -184,4 +140,8 @@ main {
 }
 .lh-tight {
   line-height: 1.25;
+}
+
+li {
+  cursor: pointer;
 }

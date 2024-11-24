@@ -1,0 +1,29 @@
+<div class="w-25 h-100 sidebar p-4 bg-primary border-top border-white  border-danger">
+  <h4 class="text-white font-semibold mb-4">Components</h4>
+  <ul class="nav flex-column">
+    {% for comp in data.components %}
+    <li class="nav-item dropdown py-2 border-1 border-bottom border-white">
+      <a
+        class="nav-link text-white"
+        href="#"
+        id="component{{ comp.name }}Dropdown"
+        role="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        {{ comp.name }}
+      </a>
+      <ul
+        class="dropdown-menu"
+        aria-labelledby="component{{ comp.name }}Dropdown"
+      >
+        {% for variant in comp.variants %}
+        <li class="p-2" onclick="addComponent('{{ comp.name }}', '{{ variant.name }}')">
+          {{variant.name}}
+        </li>
+        {% endfor %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
