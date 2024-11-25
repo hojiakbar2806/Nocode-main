@@ -42,7 +42,6 @@ def playground(projectname):
         return redirect_response
 
     components = []
-
     folders = []
 
     for folder_name in os.listdir(COMPONENTS):
@@ -111,7 +110,7 @@ def register():
         password = request.form.get('password')
 
         if username in os.listdir(USERS_FOLDER):
-            flash(message='Foydalanuvchi mavjud', category='danger')
+            flash(message='Bunday foydalanuvchi mavjud', category='danger')
             return redirect(url_for('register'))
 
         os.mkdir(f"{USERS_FOLDER}/{username}")
@@ -121,6 +120,7 @@ def register():
         with open(f"{USERS_FOLDER}/{username}/name.txt", "w") as f:
             f.write(full_name)
 
+        flash(message="Muvafaqiyatli ro'yxatdan o'tdingiz", category="success")
         return redirect(url_for('login'))
     return render_template(f'{APP_DIR}/auth/register.html')
 
