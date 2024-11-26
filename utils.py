@@ -48,3 +48,76 @@ def update_html_element(mode: mode, file_path: str, content: str, indexes: List[
 
 
 # status, message = update_html_element("append", "index.html", "new", [0, 1])
+
+
+
+
+
+
+
+
+
+
+
+
+        #
+        # for index in element_indexes:
+        #     elements = [
+        #         elem for elem in current.children if elem.name is not None]
+        #     if index >= len(elements):
+        #         print(f"Xatolik: {index}-element topilmadi")
+        #         return
+        #     current = elements[index]
+        #
+        # if mode == 'delete':
+        #     current.decompose()
+        #     print("Element o'chirildi")
+        #
+        # elif mode == 'insert':
+        #     current.clear()
+        #     new_element = prepare_new_element(new_content)
+        #     current.insert(0, new_element)
+        #     print("Element yangilandi")
+        #
+        # elif mode == 'append':
+        #     new_element = prepare_new_element(new_content)
+        #     current.insert(len(list(current.children)), new_element)
+        #     print("Element oxiriga qo'shildi")
+        #
+        # elif mode == 'prepend':
+        #     new_element = prepare_new_element(new_content)
+        #     current.insert(0, new_element)
+        #     print("Element boshiga qo'shildi")
+        #
+        # elif mode == 'replace':
+        #     new_element = prepare_new_element(new_content)
+        #     current.replace_with(new_element)
+        #     print("Element almashtirildi")
+        #
+        # elif mode == 'wrap':
+        #     if '<' in new_content and '>' in new_content:
+        #         wrapper = BeautifulSoup(new_content, 'html.parser').contents[0]
+        #         current.wrap(wrapper)
+        #         print("Element o'raldi")
+        #     else:
+        #         print("Xatolik: wrapper HTML element bo'lishi kerak")
+        #
+        # elif mode == 'unwrap':
+        #     current.unwrap()
+        #     print("Element ochildi")
+        #
+        # elif mode == 'attr':
+        #     try:
+        #         attr_name, attr_value = new_content.split('=')
+        #         current[attr_name.strip()] = attr_value.strip()
+        #         print("Attribut o'zgartirildi")
+        #     except:
+        #         print("Xatolik: format 'attr_name=attr_value' bo'lishi kerak")
+        #
+        # elif mode == 'clear':
+        #     current.clear()
+        #     print("Element tozalandi")
+        #
+        # else:
+        #     print("Xatolik: noto'g'ri mode")
+        #     return

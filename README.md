@@ -1,2 +1,0 @@
-# Nocode-main
-NoCoding app
