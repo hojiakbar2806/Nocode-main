@@ -1,8 +1,8 @@
 import os
 import json
 import shutil
-from flask import Flask, render_template
-from flask import Flask, request, jsonify, session
+
+from flask import jsonify, session, send_file
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, request, render_template, redirect, url_for, flash, abort
 
@@ -32,7 +32,15 @@ def home():
         return redirect_response
     path = f"{USERS_FOLDER}/{session['username']}"
     folders = [f for f in os.listdir(path) if os.path.isdir(f"{path}/{f}")]
-    return render_template(f"{APP_DIR}/dashboard/profile.html", folders=folders, username=session["username"])
+
+    name = open(path + "/name.txt", "r").read()
+    data = {
+        "username":session['username'],
+        "folders":folders,
+        "name":name,
+        "btn":False,
+    }
+    return render_template(f"{APP_DIR}/dashboard/profile.html", data=data)
 
 
 @app.route("/playground/<projectname>")
@@ -71,10 +79,15 @@ def playground(projectname):
 
         components.append(component)
 
+
+    path = f"{USERS_FOLDER}/{session['username']}"
+    name = open(path + "/name.txt", "r").read()
     data = {
         "username": session["username"],
         "projectname": projectname,
-        "components": components
+        "components": components,
+        "btn":True,
+        "name":name
     }
     return render_template(f'{APP_DIR}/dashboard/playground.html', data=data)
 
@@ -223,6 +236,15 @@ def update_element(mode, projectname):
     flash(message, category="success" if status else "danger")
     return jsonify({"status": status})
 
+
+@app.route("/download/<projectname>")
+def download(projectname):
+    redirect_response = auth_user()
+    if redirect_response:
+        return redirect_response
+    username = session.get("username")
+    file_path = f"{USERS_FOLDER}/{username}/{projectname}/index.html"
+    return send_file(file_path, download_name=f"{projectname}.html", as_attachment=True)
 
 if __name__ == '__main__':
     os.makedirs(USERS_FOLDER, exist_ok=True)

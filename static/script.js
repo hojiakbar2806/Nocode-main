@@ -1,19 +1,21 @@
+const optionDrawer = document.querySelector(".options-drawer");
+const closeOptionBtn = document.querySelector(".close-option-button");
+
+closeOptionBtn.addEventListener("click", () => {
+  optionDrawer.classList.remove("show");
+});
+
 const iframe = document.getElementById("playground_inner");
 let selectedElementPath = null;
 
 if (iframe !== null) {
-  iframe.addEventListener("load", setupIframeInteractions);
-}
+  iframe.addEventListener("load", () => {
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    addSelectionStyle(iframeDoc);
 
-function setupIframeInteractions() {
-  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-
-  // Style qo'shish
-  addSelectionStyle(iframeDoc);
-
-  // Event listener'larni qo'shish
-  iframeDoc.addEventListener("click", handleElementSelection);
-  iframeDoc.addEventListener("keydown", handleElementDeletion);
+    iframeDoc.addEventListener("dblclick", handleElementSelection);
+    iframeDoc.addEventListener("keydown", handleElementDeletion);
+  });
 }
 
 function addSelectionStyle(doc) {
@@ -32,35 +34,22 @@ function handleElementSelection(event) {
   const target = event.target;
   const rootElement = iframeDoc.getElementById("root");
 
-  // Root elementni tekshirish
+  if (optionDrawer) {
+    optionDrawer.classList.add("show");
+  }
+
+  console.log(optionDrawer);
   if (!rootElement) {
     console.error("root element topilmadi!");
     return;
   }
 
-  // Oldingi tanlangan elementni tozalash
   clearPreviousSelection(iframeDoc);
-
-  // Yangi elementni tanlash
   markSelectedElement(target);
 
-  // Element yo'lini hisoblash
   const indexPath = getElementIndexPath(target, rootElement);
   selectedElementPath = indexPath;
-
-  // Element haqida ma'lumot
-  const elementInfo = getElementInfo(target);
-
-  // Element ma'lumotini ko'rsatish
-  target.setAttribute("data-element-info", elementInfo);
-
-  console.log("Tanlangan element:", {
-    type: target.tagName.toLowerCase(),
-    class: target.className,
-    id: target.id,
-    path: indexPath,
-    info: elementInfo,
-  });
+  target.setAttribute("data-element-info", getElementInfo(target));
 }
 
 function handleElementDeletion(event) {
@@ -69,13 +58,7 @@ function handleElementDeletion(event) {
     selectedElementPath
   ) {
     const projectName = window.location.pathname.split("/")[2];
-
-    deleteElement(projectName, selectedElementPath).then((success) => {
-      if (success) {
-        console.log("Element muvaffaqiyatli o'chirildi:", selectedElementPath);
-        selectedElementPath = null;
-      }
-    });
+    deleteElement(projectName, selectedElementPath);
   }
 }
 
@@ -125,23 +108,6 @@ function deleteElement(projectName, elementPath) {
     body: JSON.stringify({ elementPath }),
   }).then(() => window.location.reload());
 }
-
-window.onload = function () {
-  const modalElement = document.getElementById("myModal");
-  const modalBtn = document.getElementById("modal_btn");
-
-  if (!modalElement) {
-    return;
-  }
-
-  var myModal = new bootstrap.Modal(modalElement, {
-    keyboard: false,
-  });
-
-  modalBtn.addEventListener("click", function () {
-    myModal.show();
-  });
-};
 
 function addComponent(component, variant) {
   const projectName = window.location.pathname.split("/")[2];

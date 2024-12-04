@@ -6,7 +6,7 @@ mode = Literal["insert", 'append', 'delete', 'replace',
                'wrap', 'unwrap', 'attr', 'clear']
 
 
-def update_html_element(mode: mode, file_path: str, content: str, indexes: List[int] = None) -> Tuple[bool, str]:
+def update_html_element(mode_fn: mode, file_path: str, content: str, indexes: List[int] = None) -> Tuple[bool, str]:
 
     with open(file_path, "r") as f:
         soup = BeautifulSoup(f.read(), "html.parser")
@@ -32,7 +32,7 @@ def update_html_element(mode: mode, file_path: str, content: str, indexes: List[
                 return (False, "Element topilmadi")
             current_elem = elements[index]
 
-    match mode:
+    match mode_fn:
         case "append":
             current_elem.append(content)
             with open(file_path, "w") as f:
