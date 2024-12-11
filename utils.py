@@ -2,8 +2,8 @@ from bs4 import BeautifulSoup
 from typing import List, Literal, Tuple
 
 
-mode = Literal["insert", 'append', 'delete', 'replace',
-               'wrap', 'unwrap', 'attr', 'clear']
+mode = Literal["insert", 'append', 'prepend', 'delete',
+               'replace', 'wrap', 'unwrap', 'attr']
 
 
 def update_html_element(mode_fn: mode, file_path: str, content: str, indexes: List[int] = None) -> Tuple[bool, str]:
@@ -19,8 +19,11 @@ def update_html_element(mode_fn: mode, file_path: str, content: str, indexes: Li
                 f.write(t.read())
         return (False, "#root element topilmadi")
 
-    if '<' in content and '>' in content:
-        content = BeautifulSoup(content, 'html.parser').contents[0]
+    if content is not None:
+        print("content is not None")
+        if '<' in content and '>' in content:
+            content = BeautifulSoup(content, 'html.parser')
+            print("content=", content, end="\n\n")
 
     if indexes is not None:
         for index in indexes:
@@ -32,92 +35,60 @@ def update_html_element(mode_fn: mode, file_path: str, content: str, indexes: Li
                 return (False, "Element topilmadi")
             current_elem = elements[index]
 
+    print("current elem=", current_elem, end="\n\n")
+    print("mode=", mode_fn, end="\n\n")
+    print("indexes=", indexes, end="\n\n")
+
     match mode_fn:
         case "append":
-            current_elem.append(content)
+            current_elem.insert(len(list(current_elem.children)), content)
+            with open(file_path, "w") as f:
+                f.write(str(soup))
+            return (True, "Element qo'shildi")
+        case "prepend":
+            current_elem.insert(0, content)
             with open(file_path, "w") as f:
                 f.write(str(soup))
             return (True, "Element qo'shildi")
         case "delete":
+            if current_elem == soup.find(id="root"):
+                return (False, "Root element o'chirib bo'lmaydi")
             current_elem.decompose()
             with open(file_path, "w") as f:
                 f.write(str(soup))
             return (True, "Element o'chirildi")
+        case "wrap":
+            if '<' in content and '>' in content:
+                wrapper = BeautifulSoup(content, 'html.parser').contents[0]
+                current_elem.wrap(wrapper)
+                with open(file_path, "w") as f:
+                    f.write(str(soup))
+                return (True, "Element o'raldi")
+            else:
+                return (False, "Wrapper element topilmadi")
+        case "unwrap":
+            current_elem.unwrap()
+            with open(file_path, "w") as f:
+                f.write(str(soup))
+            return (True, "Element o'chirildi")
+        case "replace":
+            current_elem.replace_with(content)
+            with open(file_path, "w") as f:
+                f.write(str(soup))
+            return (True, "Element yangilandi")
+        case "attr":
+            if '<' in content and '>' in content:
+                attrs = BeautifulSoup(content, 'html.parser').attrs
+                for key, value in attrs.items():
+                    current_elem[key] = value
+                with open(file_path, "w") as f:
+                    f.write(str(soup))
+                return (True, "Element atributlari yangilandi")
+            else:
+                return (False, "Atributlar topilmadi")
         case _:
             return (False, "Mode topilmadi")
 
 
-# status, message = update_html_element("append", "index.html", "new", [0, 1])
-
-
-
-
-
-
-
-
-
-
-
-
-        #
-        # for index in element_indexes:
-        #     elements = [
-        #         elem for elem in current.children if elem.name is not None]
-        #     if index >= len(elements):
-        #         print(f"Xatolik: {index}-element topilmadi")
-        #         return
-        #     current = elements[index]
-        #
-        # if mode == 'delete':
-        #     current.decompose()
-        #     print("Element o'chirildi")
-        #
-        # elif mode == 'insert':
-        #     current.clear()
-        #     new_element = prepare_new_element(new_content)
-        #     current.insert(0, new_element)
-        #     print("Element yangilandi")
-        #
-        # elif mode == 'append':
-        #     new_element = prepare_new_element(new_content)
-        #     current.insert(len(list(current.children)), new_element)
-        #     print("Element oxiriga qo'shildi")
-        #
-        # elif mode == 'prepend':
-        #     new_element = prepare_new_element(new_content)
-        #     current.insert(0, new_element)
-        #     print("Element boshiga qo'shildi")
-        #
-        # elif mode == 'replace':
-        #     new_element = prepare_new_element(new_content)
-        #     current.replace_with(new_element)
-        #     print("Element almashtirildi")
-        #
-        # elif mode == 'wrap':
-        #     if '<' in new_content and '>' in new_content:
-        #         wrapper = BeautifulSoup(new_content, 'html.parser').contents[0]
-        #         current.wrap(wrapper)
-        #         print("Element o'raldi")
-        #     else:
-        #         print("Xatolik: wrapper HTML element bo'lishi kerak")
-        #
-        # elif mode == 'unwrap':
-        #     current.unwrap()
-        #     print("Element ochildi")
-        #
-        # elif mode == 'attr':
-        #     try:
-        #         attr_name, attr_value = new_content.split('=')
-        #         current[attr_name.strip()] = attr_value.strip()
-        #         print("Attribut o'zgartirildi")
-        #     except:
-        #         print("Xatolik: format 'attr_name=attr_value' bo'lishi kerak")
-        #
-        # elif mode == 'clear':
-        #     current.clear()
-        #     print("Element tozalandi")
-        #
-        # else:
-        #     print("Xatolik: noto'g'ri mode")
-        #     return
+# status, message = update_html_element(
+#     "append", "templates/components/temple.html", '<div class="container"></div>', [0])

@@ -3,7 +3,8 @@ block content %}
 
 <div id="root">
   <div
-    class="w-25 h-100 sidebar p-4 bg-primary border-top border-white border-danger"
+    style="min-width: 300px"
+    class="h-100 sidebar p-4 bg-primary border-top border-white border-danger"
   >
     <h4 class="text-white font-semibold mb-4">Components</h4>
     <ul class="nav flex-column">
@@ -24,12 +25,12 @@ block content %}
           aria-labelledby="component{{ comp.name }}Dropdown"
         >
           {% for variant in comp.variants %}
-          <li
+          <button
             class="p-2"
             onclick="addComponent('{{ comp.name }}', '{{ variant.name }}')"
           >
             {{variant.name}}
-          </li>
+          </button>
           {% endfor %}
         </ul>
       </li>
@@ -44,6 +45,7 @@ block content %}
       id="playground_inner"
       width="100%"
       height="100%"
+      style="zoom: 70%"
       src="/{{data.username}}/{{data.projectname}}"
       frameborder="2"
     >

@@ -35,10 +35,10 @@ def home():
 
     name = open(path + "/name.txt", "r").read()
     data = {
-        "username":session['username'],
-        "folders":folders,
-        "name":name,
-        "btn":False,
+        "username": session['username'],
+        "folders": folders,
+        "name": name,
+        "btn": False,
     }
     return render_template(f"{APP_DIR}/dashboard/profile.html", data=data)
 
@@ -79,15 +79,14 @@ def playground(projectname):
 
         components.append(component)
 
-
     path = f"{USERS_FOLDER}/{session['username']}"
     name = open(path + "/name.txt", "r").read()
     data = {
         "username": session["username"],
         "projectname": projectname,
         "components": components,
-        "btn":True,
-        "name":name
+        "btn": True,
+        "name": name
     }
     return render_template(f'{APP_DIR}/dashboard/playground.html', data=data)
 
@@ -226,12 +225,12 @@ def update_element(mode, projectname):
     if redirect_response:
         return redirect_response
 
-    indexes = json.loads(request.data).get("elementPath")
+    indexes = json.loads(request.data).get("elementIndex")
+    content = json.loads(request.data).get("content")
     username = session.get("username")
-
     file_path = f"{USERS_FOLDER}/{username}/{projectname}/index.html"
 
-    status, message = update_html_element(mode, file_path, "", indexes)
+    status, message = update_html_element(mode, file_path, content, indexes)
 
     flash(message, category="success" if status else "danger")
     return jsonify({"status": status})
@@ -245,6 +244,7 @@ def download(projectname):
     username = session.get("username")
     file_path = f"{USERS_FOLDER}/{username}/{projectname}/index.html"
     return send_file(file_path, download_name=f"{projectname}.html", as_attachment=True)
+
 
 if __name__ == '__main__':
     os.makedirs(USERS_FOLDER, exist_ok=True)

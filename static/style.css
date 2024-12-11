@@ -37,8 +37,8 @@ main {
 }
 
 .options-drawer {
-  width: 400px;
   height: 100vh;
+  width: 300px;
   left: 0;
   background: #fff;
   position: absolute;
@@ -46,8 +46,8 @@ main {
   transform: translateX(-120%);
   transition: all 0.3s ease-in-out;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-  
-  button {
+
+  & > button {
     width: 30px;
     margin-left: auto;
     height: 30px;
@@ -60,4 +60,24 @@ main {
 
 .options-drawer.show {
   transform: translateX(0);
+}
+
+.options {
+  width: 100%;
+  & > button {
+    padding: 8px 15px;
+    border-radius: 10px;
+    background: red;
+    border: none;
+    color: #fff;
+  }
+}
+
+.options-head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
 }

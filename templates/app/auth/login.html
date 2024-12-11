@@ -1,37 +1,39 @@
-{% extends "app/base.html" %} {% block title %}Login{% endblock %} {%
-block content %}
-<div class="w-100 h-100 d-flex justify-content-center align-items-center">
-  <div class="row justify-content-center min-vw-100">
-    <div class="col-md-4">
-      <h2 class="text-center mb-4">Login</h2>
+<div id="root">
+  {% extends "app/base.html" %} {% block title %}Login{% endblock %} {% block
+  content %}
+  <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+    <div class="row justify-content-center min-vw-100">
+      <div class="col-md-4">
+        <h2 class="text-center mb-4">Login</h2>
 
-      <form method="POST">
-        <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            class="form-control"
-            required
-          />
+        <form method="POST">
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              class="form-control"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+        <div class="text-center mt-3">
+          <a href="{{ url_for('register') }}">Ro'yxatdan o'tish</a>
         </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            class="form-control"
-            required
-          />
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Login</button>
-      </form>
-      <div class="text-center mt-3">
-        <a href="{{ url_for('register') }}">Ro'yxatdan o'tish</a>
       </div>
     </div>
   </div>
+  {% endblock %}
 </div>
-{% endblock %}
