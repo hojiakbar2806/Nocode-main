@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const EDIT_MODES = {
     insert: "Insert",
     replace: "Replace",
-    modify: "Modify",
+    append: "Append",
   };
 
   const COMPONENT_TYPES = {
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: "imageClass",
           label: "CSS Classes",
           type: "text",
-          placeholder: "e.g., img-fluid rounded",
+          placeholder: "bootstrap class",
         },
       ],
     },
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: "inputClass",
           label: "CSS Classes",
           type: "text",
-          placeholder: "e.g., form-control",
+          placeholder: "bootstrap class",
         },
       ],
     },
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: "textClass",
           label: "CSS Classes",
           type: "text",
-          placeholder: "e.g., text-muted",
+          placeholder: "bootstrap class",
         },
       ],
     },
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: "buttonClass",
           label: "CSS Classes",
           type: "text",
-          placeholder: "e.g., btn btn-primary",
+          placeholder: "bootstrap class",
         },
       ],
     },
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: "linkClass",
           label: "CSS Classes",
           type: "text",
-          placeholder: "e.g., btn btn-link",
+          placeholder: "bootstrap class",
         },
       ],
     },
@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     optionDrawer.classList.add("show");
     renderOptionsHead();
-    renderMainOptions();
+    if (mode) renderInsertOptions();
   }
 
   function renderOptionsHead() {
@@ -169,22 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  function renderMainOptions() {
-    switch (editMode) {
-      case "insert":
-        renderInsertOptions();
-        break;
-      case "replace":
-        renderReplaceOptions();
-        break;
-      case "modify":
-        renderModifyOptions();
-        break;
-      default:
-        renderDefaultOptions();
-    }
-  }
-
   function renderInsertOptions() {
     options.innerHTML = `
       <div class="mb-3">
@@ -202,86 +186,6 @@ document.addEventListener("DOMContentLoaded", () => {
       <div id="componentOptions" class="mb-3"></div>
       <button class="btn btn-primary w-100" onclick="window.saveComponent('insert')">Insert Component</button>
     `;
-  }
-
-  function renderReplaceOptions() {
-    renderInsertOptions();
-  }
-
-  function renderModifyOptions() {
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-    const selectedElement = iframeDoc.querySelector(".selected-element");
-
-    const componentType = detectComponentType(selectedElement);
-
-    options.innerHTML = `
-      <div class="mb-3">
-        <h5>Modify: ${COMPONENT_TYPES[componentType]?.label || "Component"}</h5>
-      </div>
-      ${renderComponentOptions(componentType, selectedElement)}
-      <button class="btn btn-primary w-100" onclick="window.saveComponent('modify')">Update Component</button>
-    `;
-  }
-
-  function detectComponentType(element) {
-    if (element.tagName === "IMG") return "image";
-    if (element.tagName === "INPUT") return "input";
-    if (
-      ["P", "H1", "H2", "H3", "H4", "H5", "H6", "SPAN", "DIV"].includes(
-        element.tagName
-      )
-    )
-      return "text";
-    if (element.tagName === "BUTTON") return "button";
-    if (element.tagName === "A") return "link";
-    return null;
-  }
-
-  function renderComponentOptions(type, element) {
-    if (!type || !COMPONENT_TYPES[type]) return "";
-
-    return COMPONENT_TYPES[type].options
-      .map((option) => {
-        let input = "";
-        switch (option.type) {
-          case "select":
-            input = `
-            <select id="${option.id}" class="form-select">
-              ${option.choices
-                .map(
-                  (choice) => `
-                <option value="${choice}" ${
-                    element[option.id] === choice ? "selected" : ""
-                  }>
-                  ${choice}
-                </option>
-              `
-                )
-                .join("")}
-            </select>
-          `;
-            break;
-          case "text":
-          default:
-            input = `
-            <input 
-              type="text" 
-              id="${option.id}" 
-              class="form-control" 
-              placeholder="${option.placeholder || ""}"
-              value="${element[option.id] || ""}"
-            >
-          `;
-        }
-
-        return `
-        <div class="mb-3">
-          <label for="${option.id}" class="form-label">${option.label}</label>
-          ${input}
-        </div>
-      `;
-      })
-      .join("");
   }
 
   window.showComponentOptions = function () {
@@ -389,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
         content = `
           <button 
             type="${buttonType}" 
-            class="${buttonClass}"
+            class="${buttonClass} btn btn-primary"
           >
             ${buttonContent}
           </button>
@@ -415,10 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
       elementIndex: selectedElementPath,
     };
 
-    const endpoint =
-      mode === "insert"
-        ? `/update-element/append/${projectName}`
-        : `/update-element/replace/${projectName}`;
+    const endpoint = `/update-element/${editMode}/${projectName}`;
 
     fetch(endpoint, {
       method: "POST",
@@ -463,7 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.setEditMode = function (mode) {
     editMode = mode;
     renderOptionsHead();
-    renderMainOptions();
+    renderInsertOptions();
   };
 
   function getElementIndexPath(element, rootElement) {

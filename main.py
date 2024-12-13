@@ -30,6 +30,7 @@ def home():
     redirect_response = auth_user()
     if redirect_response:
         return redirect_response
+
     path = f"{USERS_FOLDER}/{session['username']}"
     folders = [f for f in os.listdir(path) if os.path.isdir(f"{path}/{f}")]
 
@@ -248,4 +249,4 @@ def download(projectname):
 
 if __name__ == '__main__':
     os.makedirs(USERS_FOLDER, exist_ok=True)
-    app.run(debug=True, host='0.0.0.0', port=8001)
+    app.run(debug=True, host='0.0.0.0', port=8000)

@@ -45,7 +45,7 @@ def update_html_element(mode_fn: mode, file_path: str, content: str, indexes: Li
             with open(file_path, "w") as f:
                 f.write(str(soup))
             return (True, "Element qo'shildi")
-        case "prepend":
+        case "insert":
             current_elem.insert(0, content)
             with open(file_path, "w") as f:
                 f.write(str(soup))
