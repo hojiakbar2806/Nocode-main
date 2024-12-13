@@ -59,9 +59,20 @@ document.addEventListener("DOMContentLoaded", () => {
         { id: "textContent", label: "Text Content", type: "text" },
         {
           id: "textTag",
-          label: "HTML Tag",
+          label: "Type",
           type: "select",
-          choices: ["p", "h1", "h2", "h3", "h4", "h5", "h6", "span", "div"],
+          choices: [
+            "p",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "span",
+            "div",
+            "text",
+          ],
         },
         {
           id: "textClass",
@@ -282,9 +293,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const textContent = document.getElementById("textContent").value;
         const textTag = document.getElementById("textTag").value;
         const textClass = document.getElementById("textClass").value;
-        content = `
+        if (textTag == "text") {
+          content = `${textContent}`;
+        } else {
+          content = `
           <${textTag} class="${textClass}">${textContent}</${textTag}>
         `;
+        }
         break;
       case "button":
         const buttonContent = document.getElementById("buttonContent").value;
@@ -306,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
         content = `
           <a 
             href="${linkHref}" 
-            class="${linkClass}"
+            class="${linkClass} nav-link"
           >
             ${linkContent}
           </a>

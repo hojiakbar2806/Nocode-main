@@ -2,8 +2,7 @@ from bs4 import BeautifulSoup
 from typing import List, Literal, Tuple
 
 
-mode = Literal["insert", 'append', 'prepend', 'delete',
-               'replace', 'wrap', 'unwrap', 'attr']
+mode = Literal["insert", 'append', 'delete', 'replace']
 
 
 def update_html_element(mode_fn: mode, file_path: str, content: str, indexes: List[int] = None) -> Tuple[bool, str]:
@@ -19,9 +18,11 @@ def update_html_element(mode_fn: mode, file_path: str, content: str, indexes: Li
                 f.write(t.read())
         return (False, "#root element topilmadi")
 
+    tag = False
     if content is not None:
         print("content is not None")
         if '<' in content and '>' in content:
+            tag = True
             content = BeautifulSoup(content, 'html.parser')
             print("content=", content, end="\n\n")
 
@@ -35,18 +36,20 @@ def update_html_element(mode_fn: mode, file_path: str, content: str, indexes: Li
                 return (False, "Element topilmadi")
             current_elem = elements[index]
 
-    print("current elem=", current_elem, end="\n\n")
-    print("mode=", mode_fn, end="\n\n")
-    print("indexes=", indexes, end="\n\n")
-
     match mode_fn:
         case "append":
-            current_elem.insert(len(list(current_elem.children)), content)
+            if tag:
+                current_elem.insert(len(list(current_elem.children)), content)
+            else:
+                current_elem.string = current_elem.string+content
             with open(file_path, "w") as f:
                 f.write(str(soup))
             return (True, "Element qo'shildi")
         case "insert":
-            current_elem.insert(0, content)
+            if tag:
+                current_elem.insert(0, content)
+            else:
+                current_elem.string = content+current_elem.string
             with open(file_path, "w") as f:
                 f.write(str(soup))
             return (True, "Element qo'shildi")
@@ -57,35 +60,15 @@ def update_html_element(mode_fn: mode, file_path: str, content: str, indexes: Li
             with open(file_path, "w") as f:
                 f.write(str(soup))
             return (True, "Element o'chirildi")
-        case "wrap":
-            if '<' in content and '>' in content:
-                wrapper = BeautifulSoup(content, 'html.parser').contents[0]
-                current_elem.wrap(wrapper)
-                with open(file_path, "w") as f:
-                    f.write(str(soup))
-                return (True, "Element o'raldi")
-            else:
-                return (False, "Wrapper element topilmadi")
-        case "unwrap":
-            current_elem.unwrap()
-            with open(file_path, "w") as f:
-                f.write(str(soup))
-            return (True, "Element o'chirildi")
+
         case "replace":
-            current_elem.replace_with(content)
+            if tag:
+                current_elem.replace_with(content)
+            else:
+                current_elem.string = content
             with open(file_path, "w") as f:
                 f.write(str(soup))
             return (True, "Element yangilandi")
-        case "attr":
-            if '<' in content and '>' in content:
-                attrs = BeautifulSoup(content, 'html.parser').attrs
-                for key, value in attrs.items():
-                    current_elem[key] = value
-                with open(file_path, "w") as f:
-                    f.write(str(soup))
-                return (True, "Element atributlari yangilandi")
-            else:
-                return (False, "Atributlar topilmadi")
         case _:
             return (False, "Mode topilmadi")
 

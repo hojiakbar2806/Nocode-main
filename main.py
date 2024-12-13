@@ -243,8 +243,16 @@ def download(projectname):
     if redirect_response:
         return redirect_response
     username = session.get("username")
-    file_path = f"{USERS_FOLDER}/{username}/{projectname}/index.html"
-    return send_file(file_path, download_name=f"{projectname}.html", as_attachment=True)
+
+    export_file_path = f"templates/users/{username}/{projectname}/export.html"
+    render_file_path = f"users/{username}/{projectname}/index.html"
+
+    html = render_template(render_file_path, projectname=projectname)
+
+    with open(export_file_path, "w") as f:
+        f.write(html)
+
+    return send_file(export_file_path, download_name=f"{projectname}.html", as_attachment=True)
 
 
 if __name__ == '__main__':
