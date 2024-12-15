@@ -25,7 +25,7 @@ def auth_user():
         return redirect(url_for('register'))
 
 
-@app.route('/')
+@app.route('/nocode/')
 def home():
     redirect_response = auth_user()
     if redirect_response:
@@ -44,7 +44,7 @@ def home():
     return render_template(f"{APP_DIR}/dashboard/profile.html", data=data)
 
 
-@app.route("/playground/<projectname>")
+@app.route("/nocode/playground/<projectname>")
 def playground(projectname):
     redirect_response = auth_user()
     if redirect_response:
@@ -92,7 +92,7 @@ def playground(projectname):
     return render_template(f'{APP_DIR}/dashboard/playground.html', data=data)
 
 
-@app.route("/login", methods=["POST", "GET"])
+@app.route("/nocode/login", methods=["POST", "GET"])
 def login():
     username = request.form.get('username')
     password = request.form.get('password')
@@ -115,7 +115,7 @@ def login():
     return render_template(f'{APP_DIR}/auth/login.html')
 
 
-@app.route("/register", methods=["POST", "GET"])
+@app.route("/nocode/register", methods=["POST", "GET"])
 def register():
     if request.method == 'POST':
         full_name = request.form.get('full_name')
@@ -138,7 +138,7 @@ def register():
     return render_template(f'{APP_DIR}/auth/register.html')
 
 
-@app.route("/logout")
+@app.route("/nocode/logout")
 def logout():
     redirect_response = auth_user()
     if redirect_response:
@@ -149,7 +149,7 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route("/create-project", methods=["POST"])
+@app.route("/nocode/create-project", methods=["POST"])
 def create_project():
     projectname = request.form.get('projectname')
     projectname = projectname.capitalize()
@@ -173,7 +173,7 @@ def create_project():
     return redirect(url_for('home'))
 
 
-@app.route("/delete-project/<projectname>", methods=["POST"])
+@app.route("/nocode/delete-project/<projectname>", methods=["POST"])
 def delete_project(projectname):
     redirect_response = auth_user()
     if redirect_response:
@@ -186,7 +186,7 @@ def delete_project(projectname):
     return redirect(url_for('home'))
 
 
-@app.route("/append-component/<projectname>", methods=["GET", "POST"])
+@app.route("/nocode/append-component/<projectname>", methods=["GET", "POST"])
 def append_component(projectname):
     redirect_response = auth_user()
     if redirect_response:
@@ -209,7 +209,7 @@ def append_component(projectname):
     return jsonify({"status": status})
 
 
-@app.route("/<username>/<projectname>", methods=["GET"])
+@app.route("/nocode/<username>/<projectname>", methods=["GET"])
 def users_page(username, projectname):
     users_dir = os.listdir(USERS_FOLDER)
     if username not in users_dir:
@@ -220,7 +220,7 @@ def users_page(username, projectname):
     return render_template(f"users/{username}/{projectname}/index.html")
 
 
-@app.route("/update-element/<mode>/<projectname>", methods=["POST"])
+@app.route("/nocode/update-element/<mode>/<projectname>", methods=["POST"])
 def update_element(mode, projectname):
     redirect_response = auth_user()
     if redirect_response:
@@ -237,7 +237,7 @@ def update_element(mode, projectname):
     return jsonify({"status": status})
 
 
-@app.route("/download/<projectname>")
+@app.route("/nocode/download/<projectname>")
 def download(projectname):
     redirect_response = auth_user()
     if redirect_response:
