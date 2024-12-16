@@ -9,7 +9,7 @@ from flask import Flask, request, render_template, redirect, url_for, flash, abo
 from utils import update_html_element
 
 
-app = Flask(__name__,  template_folder="templates", static_folder='nocode/static')
+app = Flask(__name__,  template_folder="templates", static_folder='/nocode/static')
 app.secret_key = "0d5b096deee48ee17e845c44a853784b77f2daf5ba8bb21e24842cb01e6a50c4"
 USERS_FOLDER = "templates/users"
 COMPONENTS = "templates/components"
