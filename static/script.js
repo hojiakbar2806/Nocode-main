@@ -261,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     let content = "";
-    const projectName = window.location.pathname.split("/")[2];
+    const projectName = window.location.pathname.split("/")[3];
 
     switch (componentType) {
       case "image":
@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
       elementIndex: selectedElementPath,
     };
 
-    const endpoint = `/update-element/${editMode}/${projectName}`;
+    const endpoint = `/nocode/update-element/${editMode}/${projectName}`;
 
     fetch(endpoint, {
       method: "POST",
@@ -353,9 +353,9 @@ document.addEventListener("DOMContentLoaded", () => {
       (event.key === "Delete" || event.key === "Backspace") &&
       selectedElementPath
     ) {
-      const projectName = window.location.pathname.split("/")[2];
+      const projectName = window.location.pathname.split("/")[3];
 
-      fetch(`/update-element/delete/${projectName}`, {
+      fetch(`/nocode/update-element/delete/${projectName}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

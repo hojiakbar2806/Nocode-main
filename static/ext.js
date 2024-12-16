@@ -16,11 +16,11 @@ window.onload = function () {
 };
 
 function addComponent(component, variant) {
-  const projectName = window.location.pathname.split("/")[2];
+  const projectName = window.location.pathname.split("/")[3];
 
   console.log("sa");
 
-  fetch(`/append-component/${projectName}`, {
+  fetch(`/nocode/append-component/${projectName}`, {
     method: "POST",
     body: JSON.stringify({ component: component, variant: variant }),
   }).then(() => {
@@ -35,7 +35,7 @@ function handleElementDeletion(event) {
   ) {
     const projectName = window.location.pathname.split("/")[2];
 
-    fetch(`/update-element/delete/${projectName}`, {
+    fetch(`/nocode/update-element/delete/${projectName}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -11,7 +11,7 @@
         ></button>
       </div>
       <div class="modal-body">
-        <form method="POST" action="/create-project">
+        <form method="POST" action="{{url_for('create_project')}}">
           <div class="mb-3">
             <label for="projectname" class="form-label">Project name</label>
             <input

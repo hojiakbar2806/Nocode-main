@@ -1,14 +1,19 @@
-<nav class="navbar position-sticky top-0  navbar-dark bg-primary">
+<nav class="navbar position-sticky top-0 navbar-dark bg-primary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">No-Coding</a>
+    <a class="navbar-brand" href="{{url_for('home')}}">No-Coding</a>
     <h1 class="navbar-brand">{{ data.name }}</h1>
 
     <div class="d-flex justify-content-between gap-4">
       <a href="{{url_for('logout')}}" class="btn btn-light">Logout</a>
       <button id="modal_btn" class="btn btn-light">Create project</button>
       {% if data.btn %}
-       <a id="download-btn" href="/download/{{ data.projectname }}"  class="btn btn-light">Download</a>
-        {% endif %}
+      <a
+        id="download-btn"
+        href="{{url_for('download', projectname=data.projectname)}}"
+        class="btn btn-light"
+        >Download</a
+      >
+      {% endif %}
     </div>
   </div>
 </nav>
